@@ -1,6 +1,3 @@
-{-# OPTIONS_GHC -Wno-unused-imports   #-}
-{-# OPTIONS_GHC -Wno-unused-top-binds #-}
-
 -- |
 -- Module      : AOC.Challenge.Day01
 -- License     : BSD3
@@ -26,7 +23,10 @@ module AOC.Challenge.Day01 (
   , day01b
   ) where
 
-import           AOC.Prelude
+import AOC.Solver ((:~>)(..))
+import Text.Read (readMaybe)
+import Data.Maybe (mapMaybe)
+
 
 data Change = Incr Int | Decr Int | Same
 
@@ -43,9 +43,9 @@ pairwiseList (x1:x2:xs) = (x1, x2) : (pairwiseList (x2:xs))
 
 day01a :: [Int] :~> Int
 day01a = MkSol
-    { sParse = (Just).catMaybes.(map (readMaybe) ).lines
+    { sParse = \raw -> Just $ mapMaybe (readMaybe) $ lines raw
     , sShow  = show
-    , sSolve = \input -> Just $ length $ [ a | Incr a <- changeList input]
+    , sSolve = \input -> Just $ length [ a | Incr a <- changeList input]
     }
     where
       changeList = (map (uncurry mkChange)).pairwiseList 
@@ -61,9 +61,9 @@ slidingWindow wsize = go
 
 day01b :: _ :~> _
 day01b = MkSol
-    { sParse = (Just).catMaybes.(map (readMaybe) ).lines
+    { sParse = \raw -> Just $ mapMaybe (readMaybe) $ lines raw
     , sShow  = show
-    , sSolve = \input -> Just $ length $ [ a | Incr a <- changeList input]
+    , sSolve = \input -> Just $ length [ a | Incr a <- changeList input]
     }
     where
       changeList = (map (uncurry mkChange)).pairwiseList.(slidingWindow 3)
