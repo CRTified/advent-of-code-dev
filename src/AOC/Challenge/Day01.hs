@@ -24,46 +24,24 @@ module AOC.Challenge.Day01 (
   ) where
 
 import AOC.Solver ((:~>)(..))
-import Text.Read (readMaybe)
-import Data.Maybe (mapMaybe)
+import Data.Void
+import Text.Megaparsec
+import Text.Megaparsec.Char (digitChar, newline)
 
-
-data Change = Incr Int | Decr Int | Same
-
-mkChange :: Int -> Int -> Change
-mkChange a b
-  | a > b = Decr $ a - b
-  | a < b = Incr $ b - a
-  | otherwise = Same
-
-pairwiseList :: [a] -> [(a, a)]
-pairwiseList [] = []
-pairwiseList (_:[]) = []
-pairwiseList (x1:x2:xs) = (x1, x2) : (pairwiseList (x2:xs))
+type Parser = Parsec Void String
+inputP :: Parser [Int]
+inputP = (read <$> some digitChar) `sepBy1` newline
 
 day01a :: [Int] :~> Int
 day01a = MkSol
-    { sParse = \raw -> Just $ mapMaybe (readMaybe) $ lines raw
+    { sParse = parseMaybe inputP
     , sShow  = show
-    , sSolve = \input -> Just $ length [ a | Incr a <- changeList input]
+    , sSolve = \input -> Just $ length $ filter (uncurry (<)) $ zip (input) (drop 1 input)
     }
-    where
-      changeList = (map (uncurry mkChange)).pairwiseList 
 
-slidingWindow :: Num a => Int -> [a] -> [a]
-slidingWindow wsize = go
-  where
-    go xs
-      | (length window) < wsize = []
-      | otherwise = (sum window) : (go $ drop 1 xs)
-      where
-        window = take wsize xs
-
-day01b :: _ :~> _
+day01b :: [Int] :~> Int
 day01b = MkSol
-    { sParse = \raw -> Just $ mapMaybe (readMaybe) $ lines raw
+    { sParse = parseMaybe inputP
     , sShow  = show
-    , sSolve = \input -> Just $ length [ a | Incr a <- changeList input]
+    , sSolve = \input -> Just $ length $ filter (uncurry (<)) $ zip (input) (drop 3 input)
     }
-    where
-      changeList = (map (uncurry mkChange)).pairwiseList.(slidingWindow 3)

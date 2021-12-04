@@ -13,27 +13,25 @@ module AOC.Challenge.Day02 (
   ) where
 
 import AOC.Solver ((:~>)(..))
-import Text.Read (readMaybe)
-
+import Data.Void
+import Text.Megaparsec
+import Text.Megaparsec.Char (string, space, digitChar, newline)
+  
+type Parser = Parsec Void String
 data SubmarineCommand = SCForward Int | SCDown Int | SCUp Int
 
-parseSubmarineCommand :: String -> Maybe SubmarineCommand
-parseSubmarineCommand s
-  | (length splitted) == 2 = do
-      value <- readMaybe $ splitted !! 1
-      readCmd (splitted !! 0) value
-  | otherwise = Nothing
-  where
-    splitted = words s
-    readCmd :: String -> Int -> Maybe SubmarineCommand
-    readCmd "forward" v = Just $ SCForward v
-    readCmd "down" v = Just $ SCDown v
-    readCmd "up" v = Just $ SCUp v
-    readCmd _ _ = Nothing
+inputP :: Parser [SubmarineCommand]
+inputP = some $ do
+  r <- choice [ string "forward " >> (SCForward . read) <$> some digitChar
+              , string "down " >> (SCDown . read) <$> some digitChar
+              , string "up " >> (SCUp . read) <$> some digitChar
+              ]
+  space
+  return r
 
 day02a :: [SubmarineCommand] :~> Int
 day02a = MkSol
-    { sParse = \raw -> sequence $ map (parseSubmarineCommand) $ lines raw
+    { sParse = parseMaybe inputP
     , sShow  = show
     , sSolve = \input -> (\(a, b) -> Just $ a * b) $ (foldl (move) (0, 0) input)
     }
@@ -45,7 +43,7 @@ day02a = MkSol
 
 day02b :: [SubmarineCommand] :~> Int
 day02b = MkSol
-    { sParse = \raw -> sequence $ map (parseSubmarineCommand) $ lines raw
+    { sParse = parseMaybe inputP
     , sShow  = show
     , sSolve = \input -> (\(a, b, _) -> Just $ a * b) $ (foldl (move) (0, 0, 0) input)
     }

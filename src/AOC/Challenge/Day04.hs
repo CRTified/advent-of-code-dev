@@ -16,8 +16,8 @@ module AOC.Challenge.Day04 (
 
 import AOC.Solver ((:~>)(..))
 import Data.Maybe (isNothing, catMaybes)
-import Data.Void
 import Text.Read (readMaybe)
+import Data.Void
 import Text.Megaparsec
 import Text.Megaparsec.Char (char, digitChar, hspace, newline)
 import Control.Monad.State.Lazy as S
