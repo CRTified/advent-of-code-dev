@@ -25,6 +25,9 @@ import Control.Monad.State.Lazy as S
 type Board = [[Maybe Int]]
 type Game = [Int]
 
+
+-- Parsing stuff -------------------------------------------
+
 type Parser = Parsec Void String
 
 -- A row shall be 5 Ints
@@ -45,7 +48,9 @@ inputP = do
   game <- gameP
   boards <- some (newline >> boardP)
   return (game, boards)
- 
+
+-- Board Manipulation --------------------------------------
+  
 -- Fetches the nth row of the board
 boardRow :: Int -> Board -> [Maybe Int]
 boardRow n b = b !! n
@@ -75,6 +80,8 @@ boardRemaining = catMaybes . concat
 getSolution1 :: Int -> Board -> Int
 getSolution1 n b = n * (sum $ boardRemaining b)
 
+-- Game processing -----------------------------------------
+
 -- Keep consuming the game input until one board has won
 runBingoUntilWin :: Game -> S.State [Board] (Maybe Int)
 runBingoUntilWin [] = return Nothing
@@ -97,7 +104,9 @@ runBingoUntilOneUnfinished (x:xs) = do
     runBingoUntilWin xs -- Only one board left, keep going until it wins
     else
     runBingoUntilOneUnfinished xs
-    
+
+
+-- AoC Boilerplate -----------------------------------------
     
 day04a :: (Game, [Board]) :~> Int
 day04a = MkSol
