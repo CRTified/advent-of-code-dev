@@ -1,6 +1,3 @@
-{-# OPTIONS_GHC -Wno-unused-imports   #-}
-{-# OPTIONS_GHC -Wno-unused-top-binds #-}
-
 -- |
 -- Module      : AOC.Challenge.Day05
 -- License     : BSD3
@@ -9,35 +6,79 @@
 -- Portability : non-portable
 --
 -- Day 5.  See "AOC.Solver" for the types used in this module!
---
--- After completing the challenge, it is recommended to:
---
--- *   Replace "AOC.Prelude" imports to specific modules (with explicit
---     imports) for readability.
--- *   Remove the @-Wno-unused-imports@ and @-Wno-unused-top-binds@
---     pragmas.
--- *   Replace the partial type signatures underscores in the solution
---     types @_ :~> _@ with the actual types of inputs and outputs of the
---     solution.  You can delete the type signatures completely and GHC
---     will recommend what should go in place of the underscores.
 
 module AOC.Challenge.Day05 (
-    -- day05a
-  -- , day05b
+     day05a
+   , day05b
   ) where
 
-import           AOC.Prelude
+import AOC.Solver ((:~>)(..))
+import Data.Maybe (isNothing, catMaybes)
+import Text.Read (readMaybe)
+import Data.Void
+import Text.Megaparsec
+import Text.Megaparsec.Char (char, digitChar, space, newline, string)
+import Data.Ix (inRange)
 
-day05a :: _ :~> _
+type Point = (Int, Int)
+data Line = Line Point Point
+
+type Parser = Parsec Void String
+
+pointP :: Parser Point
+pointP = do
+  x <- read <$> some digitChar
+  string ","
+  y <- read <$> some digitChar
+  return (x, y)
+
+lineP :: Parser Line
+lineP = do
+  p1 <- pointP
+  string " -> "
+  p2 <- pointP
+  space
+  return $ Line p1 p2
+
+isColinear :: Point -> Point -> Bool
+isColinear (x1, y1) (x2, y2) = 0 == x1 * y2 - y1 * x2
+
+isOnLine :: Point -> Line -> Bool
+isOnLine (xp, yp) (Line (x1, y1) (x2, y2)) =
+  and [ (inRange (x1, x2) xp) || (inRange (x2, x1) xp)
+      , (inRange (y1, y2) yp) || (inRange (y2, y1) yp)
+      , isColinear (x1 - xp, y1 - yp) (x2 - xp, y2 - yp)
+      ]
+
+isStraight :: Line -> Bool
+isStraight (Line (x1, y1) (x2, y2)) = (x1 == x2) || (y1 == y2)
+
+getBoundingBox :: [Line] -> (Int, Int, Int, Int)
+getBoundingBox = foldr (update) (maxBound, maxBound, minBound, minBound)
+  where
+    update (Line (x1, y1) (x2, y2)) (minx, miny, maxx, maxy) =
+      ( minimum [x1, x2, minx]
+      , minimum [y1, y2, miny]
+      , maximum [x1, x2, maxx]
+      , maximum [y1, y2, maxy]
+      )
+
+drawMap :: [Line] -> [[Int]]
+drawMap ls = map (map (countLines)) [[(x, y) | y<- [miny..maxy]] | x <- [minx..maxx]]
+  where
+    (minx, miny, maxx, maxy) = getBoundingBox ls
+    countLines p = length $ filter (isOnLine p) ls
+
+day05a :: [Line] :~> Int
 day05a = MkSol
-    { sParse = Just
+    { sParse = parseMaybe (some lineP)
     , sShow  = show
-    , sSolve = Just
+    , sSolve = Just . length . (filter (>= 2)) . concat . drawMap . (filter isStraight)
     }
 
-day05b :: _ :~> _
+day05b :: [Line] :~> Int
 day05b = MkSol
-    { sParse = Just
+    { sParse = parseMaybe (some lineP)
     , sShow  = show
-    , sSolve = Just
+    , sSolve = Just . length . (filter (>= 2)) . concat . drawMap
     }
