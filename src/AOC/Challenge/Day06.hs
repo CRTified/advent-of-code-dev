@@ -40,16 +40,20 @@ buildFish = Prelude.foldr (addFish) M.empty
     addFish :: Int -> Fishlist -> Fishlist
     addFish f acc = M.unionWith ((+)) acc (M.singleton f 1)
 
-day06a :: [Int] :~> Integer
+day06a :: Fishlist :~> Integer
 day06a = MkSol
-    { sParse = parseMaybe inputP
+    { sParse = \raw -> case parse inputP "" raw of
+        Left e -> error $ errorBundlePretty e
+        Right r -> Just $ buildFish r
     , sShow  = show
-    , sSolve = \input -> Just $ sum $ Prelude.map (snd) $ M.toList $ (iterate (dayTick) $ buildFish input) !! 80
+    , sSolve = \input -> Just $ sum $ Prelude.map (snd) $ M.toList $ (iterate (dayTick) input) !! 80
     }
 
-day06b :: [Int] :~> Integer
+day06b :: Fishlist :~> Integer
 day06b = MkSol
-    { sParse = parseMaybe inputP
+    { sParse = \raw -> case parse inputP "" raw of
+        Left e -> error $ errorBundlePretty e
+        Right r -> Just $ buildFish r
     , sShow  = show
-    , sSolve = \input -> Just $ sum $ Prelude.map (snd) $ M.toList $ (iterate (dayTick) $ buildFish input) !! 256
+    , sSolve = \input -> Just $ sum $ Prelude.map (snd) $ M.toList $ (iterate (dayTick) input) !! 256
     }
