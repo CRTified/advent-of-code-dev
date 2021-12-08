@@ -1,6 +1,3 @@
-{-# OPTIONS_GHC -Wno-unused-imports   #-}
-{-# OPTIONS_GHC -Wno-unused-top-binds #-}
-
 -- |
 -- Module      : AOC.Challenge.Day01
 -- License     : BSD3
@@ -9,35 +6,37 @@
 -- Portability : non-portable
 --
 -- Day 1.  See "AOC.Solver" for the types used in this module!
---
--- After completing the challenge, it is recommended to:
---
--- *   Replace "AOC.Prelude" imports to specific modules (with explicit
---     imports) for readability.
--- *   Remove the @-Wno-unused-imports@ and @-Wno-unused-top-binds@
---     pragmas.
--- *   Replace the partial type signatures underscores in the solution
---     types @_ :~> _@ with the actual types of inputs and outputs of the
---     solution.  You can delete the type signatures completely and GHC
---     will recommend what should go in place of the underscores.
 
 module AOC.Challenge.Day01 (
-    -- day01a
-  -- , day01b
+     day01a
+   , day01b
   ) where
 
-import           AOC.Prelude
+import AOC.Solver ((:~>)(..))
 
-day01a :: _ :~> _
+run :: Char -> Int -> Int
+run ')' n = n - 1 
+run '(' n = n + 1 
+run  _  n = n
+
+runUntil :: (Int -> Bool) -> String -> (Int, Int)
+runUntil p input = go 0 0 input
+  where
+    go n i [] = (n, i) 
+    go n i (x:xs)
+      | p n = (n, i)
+      | otherwise = go (run x n) (i+1) xs 
+
+day01a :: String :~> Int
 day01a = MkSol
-    { sParse = Just
+    { sParse = Just . id
     , sShow  = show
-    , sSolve = Just
+    , sSolve = Just . fst . runUntil (const False)
     }
 
-day01b :: _ :~> _
+day01b :: String :~> Int
 day01b = MkSol
-    { sParse = Just
+    { sParse = Just . id
     , sShow  = show
-    , sSolve = Just
+    , sSolve = Just . snd . runUntil ((==) (-1))
     }
