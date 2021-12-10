@@ -56,6 +56,7 @@ common common-options
                      , time
                      , transformers
                      , yaml
+                     , Stack
 
   ghc-options:         -Wall
                        -Wcompat
