@@ -15,7 +15,7 @@ module AOC.Challenge.Day09 (
 import AOC.Solver ((:~>)(..))
 import Data.Void
 import Text.Megaparsec
-import Text.Megaparsec.Char (char, digitChar, hspace, space, string)
+import Text.Megaparsec.Char (digitChar, space)
 import Data.Map (Map)
 import qualified Data.Map as M
 import Data.Set (Set)
@@ -37,11 +37,7 @@ inputP = do
   return $ M.fromList $ concat [ map (\(x, h) -> ((y, x), h)) rs | (y, rs) <- zip [0..] $ map (zip [0..]) rows]
 
 getAdjacentCoords :: Coordinate -> [Coordinate]
-getAdjacentCoords (x, y) = [ (x - 1,     y)
-                           , (x    , y + 1)
-                           , (x + 1, y    )
-                           , (x    , y - 1)
-                           ]
+getAdjacentCoords (x, y) = [ (x+dx, y+dy) | (dx, dy) <- [(0, 1), (0, -1), (1, 0), (-1, 0)]]
                            
 getAdjacentHeights :: Map Coordinate Height -> Coordinate -> [Maybe Height]
 getAdjacentHeights m c = map (\c' -> M.lookup c' m) $ getAdjacentCoords c
