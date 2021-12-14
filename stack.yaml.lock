@@ -18,6 +18,13 @@ packages:
       sha256: 4a0e8d5c268b9d19cb472ac94f0e2291afbb899ce4f5878bbbe86effeba36c6f
   original:
     hackage: Stack-0.4.0
+- completed:
+    hackage: intcode-0.3.0.0@sha256:bc333d9fa5fb8088391e1751d69899e1be45eeb4ed52d70fd31e8414418aa0f9,1580
+    pantry-tree:
+      size: 496
+      sha256: 102dc9554d637e6c87704f3fb2e05ea69a8a4662df65ce41caf44715d529dee8
+  original:
+    hackage: intcode-0.3.0.0
 snapshots:
 - completed:
     size: 586286

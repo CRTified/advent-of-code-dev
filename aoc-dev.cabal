@@ -57,6 +57,7 @@ common common-options
                      , transformers
                      , yaml
                      , Stack
+                     , intcode
 
   ghc-options:         -Wall
                        -Wcompat

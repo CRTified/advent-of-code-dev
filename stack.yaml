@@ -40,6 +40,7 @@ packages:
 extra-deps:
 - advent-of-code-api-0.2.8.1
 - Stack-0.4.0
+- intcode-0.3.0.0
 
 allow-newer: true
 
