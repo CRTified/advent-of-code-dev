@@ -1,6 +1,3 @@
-{-# OPTIONS_GHC -Wno-unused-imports   #-}
-{-# OPTIONS_GHC -Wno-unused-top-binds #-}
-
 -- |
 -- Module      : AOC.Challenge.Day01
 -- License     : BSD3
@@ -22,22 +19,40 @@
 --     will recommend what should go in place of the underscores.
 
 module AOC.Challenge.Day01 (
-    -- day01a
-  -- , day01b
+     day01a
+   , day01b
   ) where
 
-import           AOC.Prelude
+import AOC.Solver ((:~>)(..))
+import Data.List (sort)
+import Data.Void
+import Text.Megaparsec
+import Text.Megaparsec.Char (digitChar, eol)
 
-day01a :: _ :~> _
+type Parser = Parsec Void String
+
+type Calories = Integer
+type ElfInventory = [Calories]
+
+caloriesP :: Parser Calories
+caloriesP = read <$> some digitChar
+
+elfInventoryP :: Parser ElfInventory
+elfInventoryP = caloriesP `sepEndBy` eol
+
+inputP :: Parser [ElfInventory]
+inputP = elfInventoryP `sepEndBy` eol
+
+day01a :: [ElfInventory] :~> Calories
 day01a = MkSol
-    { sParse = Just
+  { sParse = parseMaybe inputP
     , sShow  = show
-    , sSolve = Just
+    , sSolve = Just . maximum . (map sum)
     }
 
-day01b :: _ :~> _
+day01b :: [ElfInventory] :~> Calories
 day01b = MkSol
-    { sParse = Just
+    { sParse = parseMaybe inputP
     , sShow  = show
-    , sSolve = Just
+    , sSolve = Just . sum . (take 3) . reverse . sort . (map sum)
     }

@@ -5,15 +5,29 @@
 
 packages:
 - completed:
-    hackage: advent-of-code-api-0.2.7.0@sha256:d16c39e5f149bb046b05adf94ba2c3232a24d21587cb75b3c4c4480f1e270564,2351
+    hackage: advent-of-code-api-0.2.8.1@sha256:00a7b1fe76bdbba0ad705d906402fbb35eb35ccb6f9a7adec488a65bb8147ad4,2352
     pantry-tree:
+      sha256: d0345ab16cc2ad3a9de3a9ff1a449cf03b63ac826a017ca02ee883a6525e75fd
       size: 1185
-      sha256: 1688c03a530c5eaf1581e1d5104e8481d3b2199ce973eb8599eb64168edc3908
   original:
-    hackage: advent-of-code-api-0.2.7.0
+    hackage: advent-of-code-api-0.2.8.1
+- completed:
+    hackage: Stack-0.4.0@sha256:ada69a23ed9bbaf97260397f6b39b7a1f4e22a11bcac3fe2e8f23f1513f59fd8,1092
+    pantry-tree:
+      sha256: 4a0e8d5c268b9d19cb472ac94f0e2291afbb899ce4f5878bbbe86effeba36c6f
+      size: 355
+  original:
+    hackage: Stack-0.4.0
+- completed:
+    hackage: intcode-0.3.0.0@sha256:bc333d9fa5fb8088391e1751d69899e1be45eeb4ed52d70fd31e8414418aa0f9,1580
+    pantry-tree:
+      sha256: 102dc9554d637e6c87704f3fb2e05ea69a8a4662df65ce41caf44715d529dee8
+      size: 496
+  original:
+    hackage: intcode-0.3.0.0
 snapshots:
 - completed:
-    size: 532832
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/23.yaml
-    sha256: fbb2a0519008533924c7753bd7164ddd1009f09504eb06674acad6049b46db09
-  original: lts-16.23
+    sha256: cdead65fca0323144b346c94286186f4969bf85594d649c49c7557295675d8a5
+    size: 586286
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/16.yaml
+  original: lts-18.16
